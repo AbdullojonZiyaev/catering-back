@@ -7,8 +7,13 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       DEVICE_API_KEY: ${DEVICE_API_KEY}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173}
     ports:
       - "127.0.0.1:8000:8000"
+    # "default" reaches the database; "catering" lets the dashboard's nginx reach the API as http://api:8000
+    networks:
+      - default
+      - catering
     depends_on:
       db:
         condition: service_healthy
@@ -17,3 +22,7 @@ services:
       options:
         max-size: "5m"
         max-file: "2"
+
+networks:
+  catering:
+    name: catering
